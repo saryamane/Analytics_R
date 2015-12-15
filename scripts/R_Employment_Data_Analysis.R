@@ -52,9 +52,43 @@ getwd()
 
 # Read the csv file into the table.
 
+# For the information on the BLS metadata, look at this file.
+# http://www.bls.gov/cew/doc/layouts/csv_annual_layout.htm
+
 ann2012 <- read.csv('2012.annual.singlefile.csv', stringsAsFactors = FALSE)
 
 # This took a long time. We can try the fread library from the data.table package.
 
 ann2012_1 <- fread(input='2012.annual.singlefile.csv')
 
+head(ann2012_1)
+nrow(ann2012_1)
+ncol(ann2012_1)
+dim(ann2012_1)
+unique(ann2012_1$year)
+getwd()
+
+ann2012_1 <- fread(input='../../Practical_DataScienceTools_Cookbook_recipes/data/2012.annual.singlefile.csv', sep=',',colClasses = c('character', rep('integer',5),'character',rep('integer',31)))
+
+head(ann2012_1)
+
+# Let's read the data of those files into its respected variables.
+
+for(u in c('agglevel','area','industry','ownership','size')) {
+  assign(u,read.csv(paste('../../Practical_DataScienceTools_Cookbook_recipes/data/',u,'_titles.csv',sep=''),stringsAsFactors = FALSE ))
+}
+
+# Let's see which of the fields are common between our lookup files and the actual data set.
+
+intersect(names(ann2012_1),names(agglevel))
+# agglvl_code
+intersect(names(ann2012_1),names(area))
+# area_fips
+intersect(names(ann2012_1),names(industry))
+# industry_code
+intersect(names(ann2012_1),names(ownership))
+# own_code
+intersect(names(ann2012_1),names(size))
+# size_code
+
+head(agglevel)
